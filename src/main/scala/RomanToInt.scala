@@ -1,4 +1,4 @@
-class RomanToInt extends App {
+object RomanToInt extends App {
   def romanToInt(s: String): Int = {
     s match {
       case s"IX$rest" => 9 + romanToInt(rest)
