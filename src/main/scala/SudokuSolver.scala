@@ -1,24 +1,24 @@
 object SudokuSolver extends App {
-//  def solveSudoku(board: Array[Array[Char]]): Unit = {
-//    val map = (for {
-//      row <- (0 until 9).view
-//      col <- (0 until 9).view
-//      digit = board(row)(col)
-//      if digit != '.'
-//    } yield ((row, col), digit)).toMap
-//
-//    Sudoku(map).solve match {
-//      case None => return
-//      case Some(solved) =>
-//        (for {
-//          row <- 0 until 9
-//          col <- 0 until 9
-//        } yield (row, col))
-//          .foreach { case (r, c) =>
-//            board(r)(c) = solved.get(r, c).getOrElse('.')
-//          }
-//    }
-//  }
+  def solveSudoku(board: Array[Array[Char]]): Unit = {
+    val map = (for {
+      row <- (0 until 9).view
+      col <- (0 until 9).view
+      digit = board(row)(col)
+      if digit != '.'
+    } yield ((row, col), digit)).toMap
+
+    Sudoku(map).solve match {
+      case None => return
+      case Some(solved) =>
+        (for {
+          row <- 0 until 9
+          col <- 0 until 9
+        } yield (row, col))
+          .foreach { case (r, c) =>
+            board(r)(c) = solved.get(r, c).getOrElse('.')
+          }
+    }
+  }
   case class Sudoku(private val board: Map[(Int, Int), Char]) {
     def get(i: Int, j: Int): Option[Char] = {
       board.get((i, j))
