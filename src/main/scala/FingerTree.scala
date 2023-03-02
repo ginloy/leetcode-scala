@@ -107,8 +107,11 @@ sealed trait FingerTree[+A] {
     case Deep(left, middle, right) => Deep(left.map(f), middle.map(_.map(f)), right.map(f))
   }
 
+  def flatMap[B](f: A => FingerTree[B]): FingerTree[B] =
+    this.view.map(f).foldLeft(FingerTree[B]())((a, b) => a ++ b)
+
   override def toString: String = {
-    this.toList.toString
+    s"[${this.view.mkString(", ")}]"
   }
 
 }
@@ -207,6 +210,6 @@ object Main {
   def main(args: Array[String]): Unit = {
     val lst = FingerTree.fromList(0 to 1232)
     val lst2 = FingerTree.fromList(-200 to 1000)
-    println((lst ++ lst2).map(_-500))
+    println((lst ++ lst2).flatMap(_ => FingerTree(1, 2, 3)))
   }
 }
