@@ -1,3 +1,5 @@
+import scala.collection.View
+
 sealed trait FingerTree[+A] {
   import FingerTree.concatWithMiddle
   def +:[B >: A](x: B): FingerTree[B] = {
@@ -91,10 +93,12 @@ sealed trait FingerTree[+A] {
     case _ => false
   }
 
-  def toList: List[A] = this match {
-    case Empty => List.empty
-    case Single(x) => List(x)
-    case Deep(left, middle, right) => left.toList ++ middle.toList.flatMap(_.toList) ++ right.toList
+  def toList: List[A] = this.view.toList
+
+  def view: View[A] = this match {
+    case Empty => View.empty
+    case Single(x) => View(x)
+    case Deep(left, mid, right) => left.view ++ mid.view.flatMap(_.view) ++ right.view
   }
 
   def map[B](f: A => B): FingerTree[B] = this match {
@@ -157,6 +161,8 @@ sealed trait Node[+A] {
     case Node2(a, b) => Node2(f(a), f(b))
     case Node3(a, b, c) => Node3(f(a), f(b), f(c))
   }
+
+  def view: View[A] = this.toList.view
 }
 case class Node2[+A](_1: A, _2: A) extends Node[A]
 case class Node3[+A](_1: A, _2: A, _3: A) extends Node[A]
@@ -175,6 +181,8 @@ sealed trait Digit[+A] {
     case Digit3(a, b, c) => Digit3(f(a), f(b), f(c))
     case Digit4(a, b, c, d) => Digit4(f(a), f(b), f(c), f(d))
   }
+
+  def view: View[A] = this.toList.view
 
   def insert[B >: A](x : B): Either[(Digit[B], Node[B]), Digit[B]] = this match {
     case Digit1(a) => Right(Digit2(x, a))
@@ -195,11 +203,10 @@ case class Digit2[+A](_1: A, _2: A) extends Digit[A]
 case class Digit3[+A](_1: A, _2: A, _3: A) extends Digit[A]
 case class Digit4[+A](_1: A, _2: A, _3: A, _4: A) extends Digit[A]
 
-//object Main {
-//  def main(args: Array[String]): Unit = {
-//
-//    val lst = FingerTree.fromList(0 to 1232)
-//    val lst2 = FingerTree.fromList(-200 to 1000)
-//    println((lst ++ lst2).map(_-500))
-//  }
-//}
+object Main {
+  def main(args: Array[String]): Unit = {
+    val lst = FingerTree.fromList(0 to 1232)
+    val lst2 = FingerTree.fromList(-200 to 1000)
+    println((lst ++ lst2).map(_-500))
+  }
+}
