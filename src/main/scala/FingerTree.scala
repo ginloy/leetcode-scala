@@ -142,8 +142,8 @@ object FingerTree {
    }
 }
 
-case object Empty extends FingerTree[Nothing]
-case class Single[+A](x: A) extends FingerTree[A]
+private case object Empty extends FingerTree[Nothing]
+private case class Single[+A](x: A) extends FingerTree[A]
 case class Deep[+A](x: Digit[A], mid: FingerTree[Node[A]], y: Digit[A])
     extends FingerTree[A]
 
@@ -195,11 +195,11 @@ case class Digit2[+A](_1: A, _2: A) extends Digit[A]
 case class Digit3[+A](_1: A, _2: A, _3: A) extends Digit[A]
 case class Digit4[+A](_1: A, _2: A, _3: A, _4: A) extends Digit[A]
 
-//object Main {
-//  def main(args: Array[String]): Unit = {
-//
-//    val lst = FingerTree.fromList(0 to 1232)
-//    val lst2 = FingerTree.fromList(-200 to 1000)
-//    println((lst ++ lst2).map(_-500))
-//  }
-//}
+object Main {
+  def main(args: Array[String]): Unit = {
+
+    val lst = FingerTree.fromList(0 to 1232)
+    val lst2 = FingerTree.fromList(-200 to 1000)
+    println((lst ++ lst2).map(_-500))
+  }
+}
