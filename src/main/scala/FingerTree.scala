@@ -1,3 +1,5 @@
+import scala.collection.View
+
 sealed trait FingerTree[+A] {
   import FingerTree.concatWithMiddle
   def +:[B >: A](x: B): FingerTree[B] = {
@@ -29,7 +31,7 @@ sealed trait FingerTree[+A] {
     this match {
       case Empty       => None
       case Single(x) => Some((x, Empty))
-      case Deep(Digit1(x), xs, d2) => {
+      case Deep(Digit1(x), xs, d2) =>
         xs.viewl match {
           case None => Some((x, Empty))
           case Some((Node2(y1, y2), ys)) =>
@@ -37,7 +39,7 @@ sealed trait FingerTree[+A] {
           case Some((Node3(y1, y2, y3), ys)) =>
             Some((x, Deep(Digit3(y1, y2, y3), ys, d2)))
         }
-      }
+
       case Deep(Digit4(x1, x2, x3, x4), xs, d) =>
         Some((x1, Deep(Digit3(x2, x3, x4), xs, d)))
       case Deep(Digit3(x, y, z), xs, d) => Some((x, Deep(Digit2(y, z), xs, d)))
@@ -49,14 +51,13 @@ sealed trait FingerTree[+A] {
     this match {
       case Empty       => None
       case Single(x) => Some(Empty, x)
-      case Deep(d1, xs, Digit1(x)) => {
+      case Deep(d1, xs, Digit1(x)) =>
         xs.viewr match {
           case None => Some((Empty, x))
           case Some((ys, Node2(y1, y2))) =>
             Some((Deep(d1, ys, Digit2(y1, y2)), x))
           case Some((ys, Node3(y1, y2, y3))) =>
             Some((Deep(d1, ys, Digit3(y1, y2, y3)), x))
-        }
       }
       case Deep(d, xs, Digit4(x1, x2, x3, x4)) =>
         Some((Deep(d, xs, Digit3(x1, x2, x3)), x4))
